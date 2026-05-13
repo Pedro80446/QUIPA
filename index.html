@@ -35,12 +35,12 @@
       <div class="form-group">
         <label>Nome completo</label>
         <input type="text" id="inputNome" class="form-control" placeholder="Seu nome">
-        <div class="field-error" id="erroNome">Informe seu nome.</div>
+        <div class="field-error" id="erroNome">Informe seu nome completo.</div>
       </div>
       <div class="form-group">
         <label>Escola</label>
         <input type="text" id="inputEscola" class="form-control" placeholder="Nome da sua escola">
-        <div class="field-error" id="erroEscola">Informe a escola.</div>
+        <div class="field-error" id="erroEscola">Informe o nome da sua escola.</div>
       </div>
       <div class="form-group">
         <label>Série / Ano</label>
@@ -50,7 +50,7 @@
           <option>2º Ano — Ensino Médio</option>
           <option>3º Ano — Ensino Médio</option>
         </select>
-        <div class="field-error" id="erroSerie">Selecione a série.</div>
+        <div class="field-error" id="erroSerie">Selecione a sua série.</div>
       </div>
       <button class="btn btn-primary" onclick="fazerLoginAluno()">Entrar como Aluno</button>
     </div>
@@ -60,7 +60,7 @@
       <div class="form-group">
         <label>Nome do Professor</label>
         <input type="text" id="inputNomeProf" class="form-control" placeholder="Prof. João Silva">
-        <div class="field-error" id="erroNomeProf">Informe seu nome.</div>
+        <div class="field-error" id="erroNomeProf">Informe seu nome completo.</div>
       </div>
       <div class="form-group">
         <label>Escola</label>
@@ -70,10 +70,10 @@
       <div class="form-group">
         <label>Código de acesso</label>
         <input type="password" id="inputSenhaProf" class="form-control" placeholder="Código fornecido pela escola">
-        <div class="field-error" id="erroSenhaProf">Informe o código.</div>
+        <div class="field-error" id="erroSenhaProf">Informe o seu código.</div>
       </div>
       <div class="alert info" style="margin-bottom:14px;font-size:.8rem">
-        💡 Código padrão de demonstração: <strong>prof2024</strong>
+        💡 Código padrão de demonstração: <strong>prof2026</strong>
       </div>
       <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--yellow),#c49020)" onclick="fazerLoginProf()">Entrar como Professor</button>
     </div>
@@ -208,7 +208,7 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               Analisar Resposta
             </button>
-            <button class="btn btn-secondary btn-sm" onclick="limpar()">Limpar</button>
+            <button class="btn btn-secondary btn-sm" onclick="limpar()">🗑️ Limpar</button>
           </div>
           <div id="feedbackBox" style="display:none"></div>
         </div>
