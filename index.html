@@ -7,14 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
-</head>
-
 </head>
 <body>
 
@@ -110,7 +106,8 @@
     </nav>
     <div class="sidebar-footer">
       <button class="theme-btn" data-theme-toggle onclick="toggleTheme()">
-        <span id="themeIcon">☀️</span> <span id="themeLabel">Tema claro</span>
+        <span id="themeIcon"><img src="assets/images/themechange.png" alt="Trocar Tema" class="tema-mudar"></span>
+        <span id="themeLabel">Tema claro</span>
       </button>
       <button class="logout-btn" onclick="sair()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -129,8 +126,8 @@
       <span class="topbar-badge" id="topbarBadge">Aluno</span>
     <div class="topbar-actions">
       <button class="topbar-theme-btn" onclick="toggleTheme()">
-        <span id="themeIcon">🌙</span>
-        <span class="btn-label" id="themeLabel">Tema escuro</span>
+        <span id="themeIcon"><img src="assets/images/themechange.png" alt="Trocar Tema" class="tema-mudar"></span>
+        <span class="btn-label" id="themeLabel"></span>
       </button>
       <button class="topbar-logout-btn" onclick="sair()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
