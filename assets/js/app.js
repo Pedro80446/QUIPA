@@ -83,7 +83,7 @@ function iniciarApp() {
   document.getElementById('userEscolaLabel').textContent = perfil.escola;
   document.getElementById('userAvatar').textContent = perfil.avatar;
   document.getElementById('roleLabel').textContent = perfil.tipo === 'professor' ? 'Professor' : 'Aluno';
-  document.getElementById('topbarBadge').textContent = perfil.tipo === 'professor' ? '🏫 Professor' : '👤 Aluno';
+  document.getElementById('topbarBadge').textContent = perfil.tipo === 'professor' ? ' Professor' : ' Aluno'; 
   if (perfil.tipo === 'professor') {
     document.getElementById('userAvatar').classList.add('prof');
     buildSidebarProf();
