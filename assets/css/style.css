@@ -17,6 +17,9 @@ a{color:inherit;text-decoration:none}
 button{cursor:pointer;font-family:var(--font);border:none;outline:none}
 input,select,textarea{font-family:var(--font);outline:none}
 
+/* ===== BUNGEE HEADINGS ===== */
+.bungee-heading{font-family:"Bungee",sans-serif;font-weight:800}
+
 /* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:var(--surface)}
@@ -37,10 +40,10 @@ input,select,textarea{font-family:var(--font);outline:none}
   background:linear-gradient(135deg,var(--accent),var(--accent2));
   display:flex;align-items:center;justify-content:center;font-size:22px;
 }
-.login-img{width:100%;height:100%;object-fit: contain;border-radius:10px;}
-.loginaluno-img{max-width:100%;height:auto;object-fit: cover;border-radius:100px;}
-.loginprof-img{max-width:100%;height:auto;object-fit: cover;border-radius:100px;}
-.login-logo h1{font-family:"bungee-heading";font-size:1.7rem;font-weight:800;color:var(--text)}
+.login-img{width:46px;height:46px;border-radius:8px;object-fit:contain}
+.loginprof-img{width:46px;height:46px;border-radius:20px;}
+.loginaluno-img{max-width:46px;height:46px;object-fit: cover;border-radius:20px;}
+.login-logo h1{font-family:"Bungee",sans-serif;font-size:1.7rem;font-weight:800;color:var(--text)}
 .login-logo span{font-size:.75rem;color:var(--text2);display:block;margin-top:-4px}
 .login-tabs{display:flex;gap:8px;margin-bottom:24px;background:var(--surface2);border-radius:10px;padding:4px}
 .login-tab{flex:1;padding:9px;border:none;background:transparent;border-radius:8px;color:var(--text2);font-weight:600;font-size:.85rem;transition:.2s}
@@ -83,7 +86,7 @@ textarea.form-control{resize:vertical;min-height:80px}
 }
 .sidebar-logo{padding:22px 20px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
 .sidebar-logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:18px}
-.sidebar-logo h2{font-family:"bungee-heading";font-size:1.15rem;font-weight:800}
+.sidebar-logo h2{font-family:"Bungee",sans-serif;font-size:1.15rem;font-weight:800}
 .sidebar-logo span{font-size:.65rem;color:var(--text2)}
 .sidebar-user{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:#fff;flex-shrink:0}
@@ -121,6 +124,7 @@ textarea.form-control{resize:vertical;min-height:80px}
 .topbar-title{font-weight:700;font-size:1rem;flex:1}
 .topbar-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px}
 .content-area{flex:1;overflow-y:auto;padding:24px}
+.tema-mudar {width: 20px;height: 20px;object-fit: contain;border-radius: 100px;}
 
 /* ===== VIEWS ===== */
 .view{display:none}
