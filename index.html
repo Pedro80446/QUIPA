@@ -10,6 +10,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
 </head>
 
 </head>
@@ -21,14 +24,14 @@
     <div class="login-logo">
       <div class="login-logo-icon"> <img src="assets/images/logo.png" alt="QUIPÁ" class="login-img"> </div>
       <div>
-        <h1>QUIPÁ</h1>
+        <h1 class="bungee-heading">QUIPÁ</h1>
         <span>Sistema Inteligente de Análise de Erros</span>
       </div>
     </div>
     <p class="login-tagline">Entender o erro é abrir caminhos para crescer.</p>
     <div class="login-tabs">
-      <button class="login-tab active" id="tabAluno" onclick="switchLoginTab('aluno')">👤 Aluno</button>
-      <button class="login-tab" id="tabProf" onclick="switchLoginTab('professor')">🏫 Professor</button>
+      <button class="login-tab active" id="tabAluno" onclick="switchLoginTab('aluno')"> <img src="assets/images/alunofoto.jpg" alt="Aluno" class="loginaluno-img"> Aluno</button>
+      <button class="login-tab" id="tabProf" onclick="switchLoginTab('professor')"> <img src="assets/images/professorfoto.jpg" alt="Professor" class="loginprof-img"> Professor</button>
     </div>
 
     <!-- FORM ALUNO -->
@@ -47,10 +50,6 @@
         <label>Série / Ano</label>
         <select id="inputSerie" class="form-control">
           <option value="">Selecione...</option>
-          <option>6º Ano — Ensino Fundamental</option>
-          <option>7º Ano — Ensino Fundamental</option>
-          <option>8º Ano — Ensino Fundamental</option>
-          <option>9º Ano — Ensino Fundamental</option>
           <option>1º Ano — Ensino Médio</option>
           <option>2º Ano — Ensino Médio</option>
           <option>3º Ano — Ensino Médio</option>
@@ -94,7 +93,7 @@
     <div class="sidebar-logo">
       <div class="sidebar-logo-icon"> <img src="assets/images/logo.png" alt="QUIPÁ" class="login-img"> </div>
       <div>
-        <h2>QUIPA</h2>
+        <h2 class="bungee-heading">QUIPÁ</h2>
         <span id="roleLabel">Aluno</span>
       </div>
     </div>
