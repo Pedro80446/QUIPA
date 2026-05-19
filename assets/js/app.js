@@ -68,7 +68,7 @@ function fazerLoginProf() {
   ['erroNomeProf','erroEscolaProf','erroSenhaProf'].forEach(id => document.getElementById(id).classList.remove('visible'));
   if (!nome) { document.getElementById('erroNomeProf').classList.add('visible'); ok=false; }
   if (!escola) { document.getElementById('erroEscolaProf').classList.add('visible'); ok=false; }
-  if (!senha || senha !== 'prof2024') { document.getElementById('erroSenhaProf').classList.add('visible'); document.getElementById('erroSenhaProf').textContent = senha ? 'Código incorreto.' : 'Informe o código.'; ok=false; }
+  if (!senha || senha !== 'prof2026') { document.getElementById('erroSenhaProf').classList.add('visible'); document.getElementById('erroSenhaProf').textContent = senha ? 'Código incorreto.' : 'Informe o código.'; ok=false; }
   if (!ok) return;
   perfil = { tipo: 'professor', nome, escola, serie: 'Professor', avatar: 'P' };
   iniciarApp();
