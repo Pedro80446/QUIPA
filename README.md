@@ -57,7 +57,7 @@ Abra o arquivo `index.html` em qualquer navegador moderno. **Não é necessário
 
 | Tela               | Descrição                                                                           |
 | ------------------ | ------------------------------------------------------------------------------------- |
-| Dashboard          | KPIs de acertos, erros e aproveitamento; gráficos por área; dificuldades frequentes |
+| Dashboard          | quantidade de acertos, erros e aproveitamento; gráficos por área; dificuldades frequentes |
 | Responder Questão | Análise automática com feedback formativo detalhado                                 |
 | Histórico         | Registro completo das respostas com área, horário e padrão de erro                 |
 
@@ -67,7 +67,7 @@ Abra o arquivo `index.html` em qualquer navegador moderno. **Não é necessário
 | --------------------- | -------------------------------------------------------------------------- |
 | Banco de Questões    | Cadastro com enunciado, gabarito, área do conhecimento e dica pedagógica |
 | Resultados dos Alunos | Tabela com aluno, questão, área, resultado, padrão de erro e horário   |
-| KPIs da turma         | Total de respostas, acertos, erros e alunos ativos                         |
+| informações da turma    | Total de respostas, acertos, erros e alunos ativos                         |
 | Erros frequentes      | Ranking visual dos padrões de erro para orientar intervenções em sala   |
 
 ---
