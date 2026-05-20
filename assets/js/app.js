@@ -56,9 +56,17 @@ function salvarResultadosDaEscola(escola, lista) {
 
 // ========== TABS LOGIN ==========
 function switchLoginTab(tipo) {
+ // alterna entre a tela de login
+ // do aluno e do professor
   document.getElementById('formAluno').style.display = tipo === 'aluno' ? 'block' : 'none';
+ // Exibe formulario do aluno
+ // e oculta o do professor
   document.getElementById('formProf').style.display = tipo === 'professor' ? 'block' : 'none';
+ // Exibe formulario do professor
+ // e oculta o do aluno
   document.getElementById('tabAluno').classList.toggle('active', tipo === 'aluno');
+ // adicona destaque visual
+ // na aba selecionada
   document.getElementById('tabProf').classList.toggle('active', tipo === 'professor');
 }
 
