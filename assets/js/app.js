@@ -860,27 +860,41 @@ function adicionarQuestaoPro() {
   document.getElementById('profEnunciado').value = '';
   // LIMPA O ESPAÇO DO GABARITO 
   document.getElementById('profGabarito').value = '';
+ // LIMPA O CAMPO DA DICA 
   document.getElementById('profDica').value = '';
+ // PEGA A MENSAGEM DE SUCESSO 
   const msg = document.getElementById('profMsgOk');
+ // MOSTRA A IMAGEM 
   msg.style.display = 'flex';
+ // ESCONDE A MENSAGEM APÓS 2.5 SEGUNDOS 
   setTimeout(() => msg.style.display = 'none', 2500);
+ // ATUALIZA A LISTA DE QUESTÕES 
   renderizarQuestoesProfList();
 }
 
 function renderizarQuestoesProfList() {
+ // PEGA AS QUESTÕES DA ESCOLA 
   const lista = getQuestoesDaEscola(perfil.escola);
+ // PEGA CONTAINER DA LISTA
   const cont = document.getElementById('profListaQuestoes');
+ // VERIFICA SE EXISTE QUESTÕES 
   if (!lista.length) {
     cont.innerHTML = `<div class="empty-state"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><h3>Nenhuma questão adicionada</h3><p>Use o formulário acima para adicionar questões.</p></div>`;
     return;
   }
+ // NOMES DA DISCIPLINA 
   const ALABEL = {ling:'Linguagens',hum:'Ciências Humanas',nat:'Ciências da Natureza',mat:'Matemática'};
   // contar resultados por questão
   const resultados = getResultadosDaEscola(perfil.escola);
+ // CRIA LISTA DE QUESTÕES 
   cont.innerHTML = '<div class="questoes-lista">' + lista.map((q,i) => {
+   // FILTRA RESULTADOS DA QUESTÕES 
     const resQ = resultados.filter(r => r.pergunta.toLowerCase().replace(/\s/g,'') === q.enunciado.toLowerCase().replace(/\s/g,''));
+   // CONTA ACERTOS
     const ok = resQ.filter(r => r.resultado === 'correct').length;
+   // CONTA ERROS 
     const err = resQ.filter(r => r.resultado !== 'correct').length;
+   // RETORNA O CARD HTML 
     return `<div class="questao-item-prof">
       <div class="qi-header">
         <div class="qi-text">${q.enunciado}</div>
