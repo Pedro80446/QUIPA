@@ -1,4 +1,5 @@
 
+
 // ========== ESTADO GLOBAL ==========
 let perfil = { tipo: '', nome: '', escola: '', serie: '', avatar: '' };
 let historico = [];
@@ -181,35 +182,55 @@ function sair() {
 
 // ========== DISCIPLINAS ==========
 function selecionarDisc(btn) {
+  // REMOVE A CLASSE 'ACTIVE' DAS ABAS  
   document.querySelectorAll('.disc-tab').forEach(t => t.classList.remove('active'));
+  // ADICIONA 'ACTIVE' NA ABA CLICADA 
   btn.classList.add('active');
+  // SALVA A DISCIPLINA SELECIONADA 
   discSelecionada = btn.dataset.disc;
+  // RENDERIZA AS QUESTÕES DA DISCIPLINA 
   renderizarQuestoesProfParaAluno();
 }
 
 // ========== QUESTÕES DO PROFESSOR (exibir para aluno) ==========
 function renderizarQuestoesProfParaAluno() {
+  // VERIFICA SE O USUÁRIO É ALUNO 
   if (perfil.tipo !== 'aluno') return;
   const lista = getQuestoesDaEscola(perfil.escola).filter(q => q.area === discSelecionada);
+  // PEGA OS ELEMENTOS HTML  
   const card = document.getElementById('questoesProfCard');
   const cont = document.getElementById('questoesProfLista');
+  // ESCONDE O CARD SE NÃO EXISTIR OPÇÃO 
   if (!lista.length) { card.style.display = 'none'; return; }
+  // MOSTRA O CARD 
   card.style.display = 'block';
+  // NOMES DAS DISCIPLINA 
   const ALABEL = {ling:'Linguagens',hum:'Ciências Humanas',nat:'Ciências da Natureza',mat:'Matemática'};
+  // CRIA LISTA DE QUESTÕES NA TELA 
   cont.innerHTML = lista.map((q,i) => `
+  // CARD DA QUESTÃO 
     <div style="background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:12px;margin-bottom:8px;cursor:pointer" onclick="usarQuestaoProf(${i})">
+    // TEXTO DA QUESTÃO 
       <div style="font-weight:600;font-size:.88rem;margin-bottom:4px">${q.enunciado}</div>
+      // TEXTO INFERIOR 
       <div style="font-size:.75rem;color:var(--text2)">Clique para usar esta questão ↑</div>
     </div>`).join('');
 }
 
 function usarQuestaoProf(indexLocal) {
+  // PEGA AS QUESTÕES DA DISPLINA 
   const lista = getQuestoesDaEscola(perfil.escola).filter(q => q.area === discSelecionada);
+  // PEGA A QUESTÃO SELECIONADA 
   const q = lista[indexLocal];
+  // SE NÃO EXISTIR QUESTÃO 
   if (!q) return;
+  // COLOCA A PERGUNTA NO CAMPO 
   document.getElementById('inputPergunta').value = q.enunciado;
+  // LIMPA A RESPOSTA ANTERIOR 
   document.getElementById('inputResposta').value = '';
+  //ESCONDE FEEDBACK ANTIGO
   document.getElementById('feedbackBox').style.display = 'none';
+  // COLOCA O CURSOR NO CAMPO DE RESPOSTA 
   document.getElementById('inputResposta').focus();
 }
 
@@ -812,15 +833,24 @@ function limparHistorico() {
 
 // ========== PROFESSOR — ADICIONAR QUESTÃO ==========
 function adicionarQuestaoPro() {
+  // PEGA O ENUNCIADO 
   const enunciado = document.getElementById('profEnunciado').value.trim();
+  // PEGA GABARITO 
   const gabarito = document.getElementById('profGabarito').value.trim();
+  // PEGA POR ÁREA/DISCIPLINA 
   const area = document.getElementById('profArea').value;
+  // PEGA A DICA 
   const dica = document.getElementById('profDica').value.trim();
+  // VERIFICA SE ENUNCIADO E GABARITO FORAM ESCRITOS 
   if (!enunciado || !gabarito) { alert('Preencha o enunciado e o gabarito.'); return; }
   const lista = getQuestoesDaEscola(perfil.escola);
+  // ADICIONA A NOVA QUESTÃO 
   lista.push({ id:Date.now(), enunciado, gabarito, area, dica, escola:perfil.escola, professor:perfil.nome, criado:new Date().toLocaleString('pt-BR') });
+  // SALVA AS QUESTÕES 
   salvarQuestoesDaEscola(perfil.escola, lista);
+  // LIMPA O CAMPO DO ENUNCIADO 
   document.getElementById('profEnunciado').value = '';
+  // LIMPA O ESPAÇO DO GABARITO 
   document.getElementById('profGabarito').value = '';
   document.getElementById('profDica').value = '';
   const msg = document.getElementById('profMsgOk');
