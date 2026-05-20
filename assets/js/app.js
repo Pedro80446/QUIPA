@@ -170,24 +170,35 @@ const TITULOS = {
   dashboard:'Dashboard', questao:'Responder Questão', historico:'Histórico', 'prof-questoes':'Banco de Questões', 'prof-resultados':'Resultados dos Alunos'
 };
 function navegarPara(view) {
+   // Remove a classe "active" de todas as views
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+   // Remove destaque do menu lateral
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+ // Ativa a view selecionada
   const el = document.getElementById('view-' + view);
   if (el) el.classList.add('active');
-  const nav = document.querySelector(`.nav-item[data-view="${view}"]`);
+  // Destaca item do menu atual
+  const nav = document.querySelector(`.nav-item[data-view="${view}"]`)
+  // Atualiza dashboard ao entrar nela
   if (nav) nav.classList.add('active');
+  // Atualiza o título da página
   document.getElementById('topbarTitle').textContent = TITULOS[view] || view;
   if (view === 'dashboard') atualizarDashboard();
+ // Renderiza histórico ao abrir histórico
   if (view === 'historico') renderizarHistorico();
+  // Fecha sidebar automaticamente no mobile
   if (window.innerWidth < 900) closeSidebar();
-}
-
+}// ABRIR / FECHAR MENU LATERAL
 function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
+   // Alterna abertura do menu lateral
+  do// ABRIR / FECHAR MENU LATERALcument.getElementById('sidebar').classList.toggle('open');
+   
   document.getElementById('sidebarOverlay').classList.toggle('visible');
 }
 function closeSidebar() {
   document.getElementById('sidebar').classList.remove('open');
+   // Mostra ou esconde overlay escuro
+ 
   document.getElementById('sidebarOverlay').classList.remove('visible');
 }
 
