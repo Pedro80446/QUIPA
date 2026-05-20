@@ -102,17 +102,26 @@ function fazerLoginAluno() {
 
 // ========== LOGIN PROFESSOR ==========
 function fazerLoginProf() {
+ // REALIZA AUTENTICAÇÃO DO PROFESSOR
+ // VALIDANDO NOME, ESCOLA E CÓDIGO
   const nome = document.getElementById('inputNomeProf').value.trim();
+ // CAPTURA OS DADOS DIGITADOS
   const escola = document.getElementById('inputEscolaProf').value.trim();
   const senha = document.getElementById('inputSenhaProf').value.trim();
   let ok = true;
+ // CONTROLE DE VALIDAÇÃO
   ['erroNomeProf','erroEscolaProf','erroSenhaProf'].forEach(id => document.getElementById(id).classList.remove('visible'));
+ // REMOVE MENSAGENS DE ERRO ANTERIORES
   if (!nome) { document.getElementById('erroNomeProf').classList.add('visible'); ok=false; }
+ // VALIDAÇÃO DO NOME
   if (!escola) { document.getElementById('erroEscolaProf').classList.add('visible'); ok=false; }
+ // VALIDAÇÃO DA ESCOLA
   if (!senha || senha !== 'prof2026') { document.getElementById('erroSenhaProf').classList.add('visible'); document.getElementById('erroSenhaProf').textContent = senha ? 'Código incorreto.' : 'Informe o código.'; ok=false; }
+ // VALIDACAO DA SENHA/CÓDIGO
   if (!ok) return;
   perfil = { tipo: 'professor', nome, escola, serie: 'Professor', avatar: 'P' };
   iniciarApp();
+ // INICIALIZAÇÃO APLICAÇÃO
 }
 
 // ========== INICIAR APP ==========
