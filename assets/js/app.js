@@ -925,10 +925,15 @@ function renderizarQuestoesProfList() {
 }
 
 function excluirQuestaoProf(index) {
+ // CONFIRMA A EXCLUSÃO 
   if (!confirm('Excluir esta questão?')) return;
+ // PEGA AS QUESTÕES DA ESCOLA 
   const lista = getQuestoesDaEscola(perfil.escola);
+ // REMOVE A QUESTÃO 
   lista.splice(index, 1);
+ // SALVA A LISTA ATUALIZADA 
   salvarQuestoesDaEscola(perfil.escola, lista);
+ // ATUALIZA A LISTA NA TELA 
   renderizarQuestoesProfList();
 }
 
