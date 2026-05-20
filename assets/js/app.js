@@ -871,9 +871,12 @@ function inicializarGraficos() {
 
 // ========== HISTÓRICO ==========
 const DISC_LABELS = { ling:'Linguagens', hum:'Ciências Humanas', nat:'Ciências da Natureza', mat:'Matemática' };
+// Labels das disciplinas para exibição amigável
 
 function renderizarHistorico() {
-  const container = document.getElementById('historicoList');
+  // Container onde o histórico será exibido
+  const container = // Container onde o histórico será exibidodocument.getElementById('historicoList');
+  // Caso não exista histórico, mostra mensagem vazia
   if (!historico.length) {
     container.innerHTML = `<div class="empty-state"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg><h3>Nenhuma questão respondida</h3><p>Vá para "Responder Questão" e comece a praticar!</p></div>`;
     return;
@@ -889,10 +892,13 @@ function renderizarHistorico() {
       </div>
     </div>`).join('') + '</div>';
 }
-
+// LIMPAR O HISTÓRICO
 function limparHistorico() {
+   // Se não houver histórico, não faz nada
   if (!historico.length) return;
+// Esvazia o array
   historico = [];
+ // ATUALIZA INTERFACE
   renderizarHistorico();
   atualizarDashboard();
 }
