@@ -44,7 +44,7 @@ Abra o arquivo `index.html` em qualquer navegador moderno. **Não é necessário
 
 ### Professor
 
-1. Faça login com nome, escola e código `prof2024`
+1. Faça login com nome, escola e código `prof2026`
 2. Cadastre questões em **Banco de Questões** (enunciado, gabarito, área, dica)
 3. Oriente os alunos a responderem usando o banco cadastrado
 4. Acesse **Resultados dos Alunos** para ver erros frequentes e desempenho da turma
@@ -107,8 +107,8 @@ A identidade do QUIPA é inspirada no semiárido piauiense — resistência, flo
 | Verde-oliva `#4a7c3f`  | Cor principal, botões, nav ativo |
 | Marrom terra `#5c3d11` | Títulos, destaque professor      |
 | Bege `#f5f0e8`         | Fundo do login (modo claro)       |
-| Laranja `#e85d04`      | Destaque, KPI taxa de acerto      |
-| Dourado `#c49a3c`      | KPI acertos, badge professor      |
+| Laranja `#e85d04`      | Destaque, taxa de acerto      |
+| Dourado `#c49a3c`      | Quantidade de acertos, badge professor      |
 
 | Símbolo da logo    | Significado            |
 | 🌵 QUIPÁ       | Simboliza resistência,por ser uma planta regional resistente  |
