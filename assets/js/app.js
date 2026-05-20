@@ -896,18 +896,28 @@ function renderizarQuestoesProfList() {
     const err = resQ.filter(r => r.resultado !== 'correct').length;
    // RETORNA O CARD HTML 
     return `<div class="questao-item-prof">
+    // CABEÇALHO DA QUESTÃO 
       <div class="qi-header">
+      // ENUNCIADO 
         <div class="qi-text">${q.enunciado}</div>
+        // INFORMAÇÃO DA QUESTÃO 
         <div class="qi-meta">
+        // DISCIPLINA 
           <span class="qi-area ${q.area}">${ALABEL[q.area]}</span>
+          // BOTÃO EXCULIR 
           <button class="btn-del" onclick="excluirQuestaoProf(${i})">✕</button>
         </div>
       </div>
       <div class="qi-gabarito">Gabarito: <strong>${q.gabarito}</strong> ${q.dica ? `| Dica: <em>${q.dica}</em>` : ''}</div>
+      // PROFESSOR E DATA 
       <div style="font-size:.73rem;color:var(--text2)">Por: ${q.professor} · ${q.criado}</div>
+      // ESTATÍSTICAS 
       <div class="qi-stats">
+      // ACERTOS 
         <span class="ok">✓ ${ok} acertos</span>
+        // ERROS 
         <span class="err">✗ ${err} erros</span>
+        // TOTAL DE RESPOSTAS 
         <span style="color:var(--text2)">${resQ.length} respostas</span>
       </div>
     </div>`;
