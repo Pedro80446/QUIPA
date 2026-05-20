@@ -7,14 +7,32 @@ let grafDesempenho = null;
 let grafDisciplinas = null;
 
 // ========== PADRÕES DE ERRO ==========
+
+// Guarda os tipos de erro usados pelo sistema
 const PADROES = {
+
+  // Erro na ordem das contas matemáticas
   PRIORIDADE_OPERACOES: 'Erro de prioridade de operações',
+
+  // Erro durante cálculos
   CALCULO: 'Erro de cálculo',
+
+  // Problema de interpretação da questão
   INTERPRETACAO: 'Erro de interpretação',
+
+  // Resposta curta ou incompleta
   RESPOSTA_CURTA: 'Resposta incompleta',
+
+  // Falta explicação científica
   SEM_JUSTIFICATIVA: 'Ausência de justificativa científica',
+
+  // Pequeno erro por distração
   ATENCAO: 'Erro de atenção',
+
+  // Dificuldade em análise histórica/social
   ANALISE_HISTORICA: 'Dificuldade de análise histórica',
+
+  // Erro não identificado pelo sistema
   DESCONHECIDO: 'Padrão desconhecido'
 };
 
