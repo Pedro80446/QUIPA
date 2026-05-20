@@ -953,19 +953,29 @@ function excluirQuestaoProf(index) {
 
 // ========== PROFESSOR — RESULTADOS ==========
 function renderizarResultadosProf() {
+ // BUSCA TODOS OS RESULTADOS DA ESCOLA ATUAL 
   const resultados = getResultadosDaEscola(perfil.escola);
+ // TOTAL DE RESPOSTAS REGISTRADAS 
   const total = resultados.length;
+ // CONTA QUANTOS RESULTADOS FORAM "CORRETC"
   const acertos = resultados.filter(r => r.resultado === 'correct').length;
+ // CALCULA OS ERROS 
   const erros = total - acertos;
+ // QUANTIDADES DE ALUNOS ÚNICOS PARA EVITAR REPETIÇÃO 
   const alunos = new Set(resultados.map(r => r.aluno)).size;
+ // ATUALIZA CARDS/RESUMOS DO INTERFACE
   document.getElementById('profKpiTotal').textContent = total;
   document.getElementById('profKpiAcertos').textContent = acertos;
   document.getElementById('profKpiErros').textContent = erros;
   document.getElementById('profKpiAlunos').textContent = alunos;
+ // CORPO DA TABELA ONDE OS RESULTADOS SERÃO INSERIDOS 
   const tbody = document.getElementById('profTabelaResultados');
+ // CASO NÃO TENHA NENHUM RESULTADO 
   if (!total) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:20px">Nenhum resultado ainda.</td></tr>'; }
   else {
+   // LABELS AMIGÁVEIS PARA AS DISCIPLINA 
     const ALABEL = {ling:'Ling.',hum:'Humanas',nat:'Natureza',mat:'Mat.'};
+   // RENDERIZA RESULTADOS 
     tbody.innerHTML = resultados.slice(0,50).map(r => `
       <tr>
         <td>${r.aluno}</td>
@@ -977,13 +987,20 @@ function renderizarResultadosProf() {
       </tr>`).join('');
   }
   // erros frequentes
+ // OBJETO QUE ARMAZENARÁ A FREQUÊNCIA DE ERRO 
   const freq = {};
+ // CONTA CADA VEZ O PADRÃO APARECEU 
   resultados.filter(r => r.padrao).forEach(r => { freq[r.padrao] = (freq[r.padrao]||0)+1; });
+ // ORDENA OS PADRÕES DO MAIOR PARA O MENOR 
   const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
+ // ELEMENTO QUE SERÁ EXIBIDO NO RANKING 
   const errFreq = document.getElementById('profErrFreq');
+ // CASO NÃO EXISTAM ERROS 
   if (!sorted.length) { errFreq.innerHTML = '<p style="color:var(--text2);font-size:.85rem">Nenhum padrão de erro registrado ainda.</p>'; }
   else {
+   // PEGA MAIOR VALOR PARA CALCULAR PROPORÇÕES 
     const max = sorted[0][1] || 1;
+   // RENDERIZA GRÁFICO/LISTA DE FREQUÊNCIA 
     errFreq.innerHTML = sorted.map(([nome,n]) => `
       <div class="diff-row">
         <span class="diff-name">${nome}</span>
