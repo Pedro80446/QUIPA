@@ -126,25 +126,41 @@ function fazerLoginProf() {
 
 // ========== INICIAR APP ==========
 function iniciarApp() {
+ // CONFIGURA A INTERFACE PRINCIPAL
+ // ÁPOS LOGIN DO USUÁRIO
   document.getElementById('loginView').style.display = 'none';
+ // OCULTA A TELA DE LOGIN
   document.getElementById('appView').classList.add('visible');
+ // EXIBE APLICAÇÃO PRINCIPAL 
   document.getElementById('userName').textContent = perfil.nome;
+ // ATUALIZA INFORMAÇÕES DO USUÁRIO
   document.getElementById('userSerie').textContent = perfil.serie;
   document.getElementById('userEscolaLabel').textContent = perfil.escola;
   document.getElementById('userAvatar').textContent = perfil.avatar;
   document.getElementById('roleLabel').textContent = perfil.tipo === 'professor' ? 'Professor' : 'Aluno';
+ // DEFINE O TIPO DE USUÁRIO 
   document.getElementById('topbarBadge').textContent = perfil.tipo === 'professor' ? ' Professor' : ' Aluno'; 
+ // BADGE SUPERIOR DA APLICAÇÃO
   if (perfil.tipo === 'professor') {
     document.getElementById('userAvatar').classList.add('prof');
+   // ADICIONA ESTILO VISUAL DO PROFESSOR
     buildSidebarProf();
+   // CRIA MENU LATERAL DO PROFESSOR
     navegarPara('prof-questoes');
+   //NAVEGA PARA ÁREA DE QUESTÕES
     renderizarQuestoesProfList();
+   // CARREGA A LISTA DE QUESTÕES CADATRADAS
   } else {
     buildSidebarAluno();
+   // CRIA MENU LATERAL DO ALUNO
     navegarPara('dashboard');
+   // NAVEGA DASHBOARD INICIAL 
     inicializarGraficos();
+   // INICIALIZA GRÁFICOS  
     atualizarDashboard();
+   // ATUALIZA METRICAS DO DASHBOARD
     renderizarQuestoesProfParaAluno();
+   // CARREGA QUESTOES DISPONIVEIS
   }
 }
 
