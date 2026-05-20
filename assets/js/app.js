@@ -72,18 +72,32 @@ function switchLoginTab(tipo) {
 
 // ========== LOGIN ALUNO ==========
 function fazerLoginAluno() {
+ // REALIZA A VALIDAÇÃO DOS CAMPOS
+ // E INICIA SESSÃO DOS DO ALUNO
   const nome = document.getElementById('inputNome').value.trim();
+ // CAPTURA OS DADOS DIGITAIS 
   const escola = document.getElementById('inputEscola').value.trim();
   const serie = document.getElementById('inputSerie').value;
   let ok = true;
+ // CONTROLE DE VALIDAÇÃO
   ['erroNome','erroEscola','erroSerie'].forEach(id => document.getElementById(id).classList.remove('visible'));
+ // REMOVE MESAGENS DE ERRO ANTIGAS
   ['inputNome','inputEscola','inputSerie'].forEach(id => document.getElementById(id).classList.remove('error'));
+ // REMOVE BORDAS/VERMELHAS DOS INPUTS
   if (!nome) { document.getElementById('erroNome').classList.add('visible'); document.getElementById('inputNome').classList.add('error'); ok=false; }
+ // VALIDAÇÃO DO NOME 
   if (!escola) { document.getElementById('erroEscola').classList.add('visible'); document.getElementById('inputEscola').classList.add('error'); ok=false; }
+ // VALIDAÇÃO DA ESCOLA
   if (!serie) { document.getElementById('erroSerie').classList.add('visible'); document.getElementById('inputSerie').classList.add('error'); ok=false; }
+ // VALIDAÇÃO DA SÉRIE
   if (!ok) return;
+ // INTERROMPE LOGIN CASO EXISTA ERRO
   perfil = { tipo: 'aluno', nome, escola, serie, avatar: nome.charAt(0).toUpperCase() };
+ // SALVA DADOS ALUNO LAGADO
+ // AVATAR RECEBE A PRIMEIRO LETRA
+ // DO ALUNO
   iniciarApp();
+ // INICIALIZA APLICAÇÃO
 }
 
 // ========== LOGIN PROFESSOR ==========
