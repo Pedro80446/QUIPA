@@ -1,4 +1,4 @@
-
+ 
 
 // ========== ESTADO GLOBAL ==========
 let perfil = { tipo: '', nome: '', escola: '', serie: '', avatar: '' };
