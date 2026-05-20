@@ -195,128 +195,526 @@ function usarQuestaoProf(indexLocal) {
   document.getElementById('inputResposta').focus();
 }
 
+
 // ========== ANALISAR ==========
 function analisar() {
+
+  // ===== 1. PEGAR E VALIDAR DADOS =====
+  // Captura pergunta e resposta do usuário
   const pergunta = document.getElementById('inputPergunta').value.trim();
   const resposta = document.getElementById('inputResposta').value.trim();
+
+  // Impede análise com campos vazios
   if (!pergunta || !resposta) {
-    mostrarFeedback({ tipo:'warning', titulo:'⚠️ Campos obrigatórios', explicacao:'Preencha o enunciado e sua resposta antes de continuar.', dica:'Tente digitar uma questão e a resposta nos campos acima.', padrao:null, correto:null, passos:null });
+    mostrarFeedback({
+      tipo:'warning',
+      titulo:'⚠️ Campos obrigatórios',
+      explicacao:'Preencha o enunciado e sua resposta antes de continuar.',
+      dica:'Tente digitar uma questão e a resposta nos campos acima.',
+      padrao:null,
+      correto:null,
+      passos:null
+    });
     return;
   }
+
+  // ===== 2. ANALISAR RESPOSTA =====
+  // Normaliza os textos para comparação
   const pergNorm = pergunta.toLowerCase().replace(/\s/g,'');
   const respNorm = resposta.toLowerCase().replace(/\s/g,'');
+
   let resultado = null;
 
+  // Escolhe a análise conforme a disciplina
   if (discSelecionada === 'mat') {
     resultado = analisarMat(pergNorm, respNorm, pergunta, resposta);
+
   } else if (discSelecionada === 'ling') {
     resultado = analisarLing(resposta);
+
   } else if (discSelecionada === 'nat') {
     resultado = analisarNat(resposta);
+
   } else if (discSelecionada === 'hum') {
     resultado = analisarHum(resposta);
   }
 
-  // verificar se bate com gabarito do professor
+  // ===== 3. COMPARAR COM GABARITO =====
+  // Busca questão cadastrada pelo professor
   const questoesEscola = getQuestoesDaEscola(perfil.escola);
-  const questaoProf = questoesEscola.find(q => q.enunciado.toLowerCase().replace(/\s/g,'') === pergNorm);
+
+  const questaoProf = questoesEscola.find(
+    q => q.enunciado.toLowerCase().replace(/\s/g,'') === pergNorm
+  );
+
   if (questaoProf) {
+
     const gabNorm = questaoProf.gabarito.toLowerCase().replace(/\s/g,'');
+
+    // Verifica se a resposta bate com o gabarito
     if (respNorm === gabNorm) {
-      resultado = { tipo:'correct', titulo:'✅ Gabarito do professor: CORRETO!', padrao:null, explicacao:'Sua resposta corresponde exatamente ao gabarito informado pelo professor. Ótimo trabalho!', correto:null, passos:null, dica:null, dificuldade:null };
+
+      resultado = {
+        tipo:'correct',
+        titulo:'✅ Gabarito do professor: CORRETO!',
+        padrao:null,
+        explicacao:'Sua resposta corresponde exatamente ao gabarito informado pelo professor. Ótimo trabalho!',
+        correto:null,
+        passos:null,
+        dica:null,
+        dificuldade:null
+      };
+
     } else {
-      resultado = { tipo:'wrong', titulo:'❌ Gabarito do professor: INCORRETO', padrao: resultado ? resultado.padrao : PADROES.DESCONHECIDO, explicacao: resultado ? resultado.explicacao : `Resposta esperada: "${questaoProf.gabarito}". Você respondeu: "${resposta}".`, correto: questaoProf.gabarito, passos: resultado ? resultado.passos : null, dica: questaoProf.dica || (resultado ? resultado.dica : null), dificuldade: resultado ? resultado.dificuldade : null };
+
+      resultado = {
+        tipo:'wrong',
+        titulo:'❌ Gabarito do professor: INCORRETO',
+        padrao: resultado ? resultado.padrao : PADROES.DESCONHECIDO,
+        explicacao: resultado
+          ? resultado.explicacao
+          : `Resposta esperada: "${questaoProf.gabarito}". Você respondeu: "${resposta}".`,
+        correto: questaoProf.gabarito,
+        passos: resultado ? resultado.passos : null,
+        dica: questaoProf.dica || (resultado ? resultado.dica : null),
+        dificuldade: resultado ? resultado.dificuldade : null
+      };
     }
-    // salvar resultado para o professor ver
+
+    // Salva resultado para o professor
     const resultados = getResultadosDaEscola(perfil.escola);
-    resultados.unshift({ aluno: perfil.nome, escola: perfil.escola, area: discSelecionada, pergunta, resposta, resultado: resultado.tipo, padrao: resultado.padrao, timestamp: new Date().toLocaleString('pt-BR') });
+
+    resultados.unshift({
+      aluno: perfil.nome,
+      escola: perfil.escola,
+      area: discSelecionada,
+      pergunta,
+      resposta,
+      resultado: resultado.tipo,
+      padrao: resultado.padrao,
+      timestamp: new Date().toLocaleString('pt-BR')
+    });
+
     salvarResultadosDaEscola(perfil.escola, resultados.slice(0, 200));
   }
 
-  historico.unshift({ id:Date.now(), disciplina:discSelecionada, pergunta, resposta, resultado:resultado.tipo, padrao:resultado.padrao, dificuldade:resultado.dificuldade||null, timestamp:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) });
+  // ===== 4. ATUALIZAR SISTEMA =====
+  // Salva histórico e atualiza a interface
+  historico.unshift({
+    id:Date.now(),
+    disciplina:discSelecionada,
+    pergunta,
+    resposta,
+    resultado:resultado.tipo,
+    padrao:resultado.padrao,
+    dificuldade:resultado.dificuldade||null,
+    timestamp:new Date().toLocaleTimeString('pt-BR',{
+      hour:'2-digit',
+      minute:'2-digit'
+    })
+  });
 
   mostrarFeedback(resultado);
   atualizarKpis();
+  //Resumindo,essa função verifica se o gabarito tá igual ao que o professor passou,
+  //Mas,não o por que,isso fica para o Analisadores por Área.
+  
 }
 
 // ========== ANALISADORES POR ÁREA ==========
+
 function analisarMat(pergNorm, respNorm, pergOrig, respOrig) {
+
+  // ===== 1. QUESTÃO ESPECÍFICA =====
+  // Trata manualmente a conta 2+2×3
   if (pergNorm === '2+2×3' || pergNorm === '2+2x3') {
-    if (respNorm === '12') return { tipo:'wrong', titulo:'❌ Erro identificado', padrao:PADROES.PRIORIDADE_OPERACOES, explicacao:'Você provavelmente somou 2+2=4 primeiro e depois multiplicou 4×3=12. Isso indica dificuldade com a ordem de prioridade das operações.', correto:'2×3=6 → 2+6=8', passos:['Identifique as operações: adição e multiplicação','Resolva a multiplicação primeiro: 2×3=6','Depois some: 2+6=8'], dica:'Memorize: Parênteses → Potências → × e ÷ → + e −', dificuldade:'Operações Mat.' };
-    if (respNorm === '6') return { tipo:'wrong', titulo:'❌ Resposta parcial', padrao:PADROES.ATENCAO, explicacao:'Você fez a multiplicação corretamente (2×3=6) mas esqueceu de somar o 2 do início.', correto:'2+6=8', passos:['Você acertou: 2×3=6 ✓','Faltou: 2+6=8'], dica:'Releia toda a expressão antes de dar a resposta final.', dificuldade:'Atenção / Distração' };
-    if (respNorm === '8') return { tipo:'correct', titulo:'✅ Resposta correta!', padrao:null, explicacao:'Excelente! Você aplicou corretamente a ordem das operações.', correto:null, passos:null, dica:null, dificuldade:null };
+
+    // Erro de prioridade das operações
+    if (respNorm === '12')
+      return {
+        tipo:'wrong',
+        titulo:'❌ Erro identificado',
+        padrao:PADROES.PRIORIDADE_OPERACOES,
+        explicacao:'Você provavelmente somou antes de multiplicar.',
+        correto:'2×3=6 → 2+6=8',
+        passos:[
+          'Resolva a multiplicação primeiro',
+          'Depois faça a soma'
+        ],
+        dica:'× e ÷ vêm antes de + e −',
+        dificuldade:'Operações Mat.'
+      };
+
+    // Acertou parcialmente
+    if (respNorm === '6')
+      return {
+        tipo:'wrong',
+        titulo:'❌ Resposta parcial',
+        padrao:PADROES.ATENCAO,
+        explicacao:'Você esqueceu de somar o 2 inicial.',
+        correto:'2+6=8',
+        passos:[
+          '2×3=6',
+          '2+6=8'
+        ],
+        dica:'Confira toda a expressão.',
+        dificuldade:'Atenção / Distração'
+      };
+
+    // Resposta correta
+    if (respNorm === '8')
+      return {
+        tipo:'correct',
+        titulo:'✅ Resposta correta!',
+        padrao:null,
+        explicacao:'Você aplicou corretamente a ordem das operações.',
+        correto:null,
+        passos:null,
+        dica:null,
+        dificuldade:null
+      };
   }
+
+  // Continua para análise automática
   return avaliarMat(pergNorm, respNorm);
 }
 
 function analisarLing(resposta) {
+
+  // ===== 2. ANÁLISE DE LINGUAGENS =====
+  // Conta quantidade de palavras
   const palavras = resposta.trim().split(/\s+/).length;
-  if (palavras < 5) return { tipo:'wrong', titulo:'❌ Resposta muito curta', padrao:PADROES.RESPOSTA_CURTA, explicacao:'Em Linguagens, espera-se argumentação desenvolvida com definição, exemplo e explicação. Sua resposta está muito breve.', correto:null, passos:['Apresente a ideia principal','Dê um exemplo concreto','Explique ou justifique'], dica:'Uma boa resposta de Linguagens tem ao menos 2-3 frases completas que explicam seu raciocínio.', dificuldade:'Interpretação Text.' };
-  if (palavras < 15) return { tipo:'warning', titulo:'⚠️ Resposta parcialmente desenvolvida', padrao:PADROES.INTERPRETACAO, explicacao:'Sua resposta começou bem, mas pode ser mais desenvolvida. Tente incluir exemplos ou justificativas mais detalhadas.', correto:null, passos:['Aprofunde com mais detalhes','Inclua um exemplo prático','Conclua com síntese'], dica:'Use pelo menos 3 parágrafos: introdução, desenvolvimento e conclusão.', dificuldade:'Interpretação Text.' };
-  return { tipo:'correct', titulo:'✅ Boa resposta!', padrao:null, explicacao:'O sistema identificou uma tentativa consistente de argumentação e desenvolvimento textual. Continue assim!', correto:null, passos:null, dica:null, dificuldade:null };
+
+  // Resposta curta
+  if (palavras < 5)
+    return {
+      tipo:'wrong',
+      titulo:'❌ Resposta muito curta',
+      padrao:PADROES.RESPOSTA_CURTA,
+      explicacao:'A resposta precisa de mais desenvolvimento.',
+      correto:null,
+      passos:[
+        'Explique a ideia',
+        'Dê exemplo',
+        'Justifique'
+      ],
+      dica:'Use frases completas.',
+      dificuldade:'Interpretação Text.'
+    };
+
+  // Resposta parcialmente desenvolvida
+  if (palavras < 15)
+    return {
+      tipo:'warning',
+      titulo:'⚠️ Resposta parcialmente desenvolvida',
+      padrao:PADROES.INTERPRETACAO,
+      explicacao:'Sua resposta pode ser mais detalhada.',
+      correto:null,
+      passos:[
+        'Adicione detalhes',
+        'Use exemplos',
+        'Conclua a ideia'
+      ],
+      dica:'Desenvolva melhor o raciocínio.',
+      dificuldade:'Interpretação Text.'
+    };
+
+  // Boa resposta
+  return {
+    tipo:'correct',
+    titulo:'✅ Boa resposta!',
+    padrao:null,
+    explicacao:'A resposta está bem desenvolvida.',
+    correto:null,
+    passos:null,
+    dica:null,
+    dificuldade:null
+  };
 }
 
 function analisarNat(resposta) {
-  const palavrasChave = ['energia','corpo','nutrientes','célula','fotossíntese','átomo','molécula','força','calor','luz','reação','elemento','proteína','carboidrato','respiração','osmose','difusão','evolução','ecossistema','biodiversidade','genética','dna','rna'];
-  const temConceito = palavrasChave.some(p => resposta.toLowerCase().includes(p));
+
+  // ===== 3. ANÁLISE DE CIÊNCIAS =====
+  // Procura termos científicos
+  const palavrasChave = [
+    'energia','corpo','nutrientes','célula',
+    'fotossíntese','átomo','molécula'
+  ];
+
+  const temConceito = palavrasChave.some(
+    p => resposta.toLowerCase().includes(p)
+  );
+
   const palavras = resposta.trim().split(/\s+/).length;
-  if (!temConceito) return { tipo:'wrong', titulo:'❌ Falta justificativa científica', padrao:PADROES.SEM_JUSTIFICATIVA, explicacao:'Sua resposta não apresentou conceitos científicos relevantes. Em Ciências da Natureza é essencial fundamentar com terminologia da área.', correto:null, passos:['Identifique o tema científico','Use termos técnicos (célula, energia, reação...)','Relacione os conceitos ao fenômeno'], dica:'Releia o conteúdo e identifique termos científicos relacionados.', dificuldade:'Conceitos Científicos' };
-  if (palavras < 10) return { tipo:'warning', titulo:'⚠️ Conceito incompleto', padrao:PADROES.RESPOSTA_CURTA, explicacao:'Você usou termos científicos, mas a explicação ficou muito breve. Desenvolva mais a relação entre os conceitos.', correto:null, passos:['Explique o que o conceito significa','Mostre como se aplica à questão','Dê um exemplo ou consequência'], dica:'Expanda explicando o porquê do fenômeno, não apenas o que acontece.', dificuldade:'Justif. Científica' };
-  return { tipo:'correct', titulo:'✅ Boa fundamentação científica!', padrao:null, explicacao:'Sua resposta apresenta conceitos científicos relevantes e está bem desenvolvida. Excelente!', correto:null, passos:null, dica:null, dificuldade:null };
+
+  // Sem conceitos científicos
+  if (!temConceito)
+    return {
+      tipo:'wrong',
+      titulo:'❌ Falta justificativa científica',
+      padrao:PADROES.SEM_JUSTIFICATIVA,
+      explicacao:'A resposta não usou conceitos científicos.',
+      correto:null,
+      passos:[
+        'Use termos científicos',
+        'Explique o fenômeno'
+      ],
+      dica:'Inclua conceitos da área.',
+      dificuldade:'Conceitos Científicos'
+    };
+
+  // Explicação curta
+  if (palavras < 10)
+    return {
+      tipo:'warning',
+      titulo:'⚠️ Conceito incompleto',
+      padrao:PADROES.RESPOSTA_CURTA,
+      explicacao:'A explicação ficou muito breve.',
+      correto:null,
+      passos:[
+        'Explique melhor',
+        'Mostre aplicações'
+      ],
+      dica:'Desenvolva mais a resposta.',
+      dificuldade:'Justif. Científica'
+    };
+
+  // Resposta boa
+  return {
+    tipo:'correct',
+    titulo:'✅ Boa fundamentação científica!',
+    padrao:null,
+    explicacao:'A resposta está bem fundamentada.',
+    correto:null,
+    passos:null,
+    dica:null,
+    dificuldade:null
+  };
 }
 
 function analisarHum(resposta) {
-  const termosHum = ['história','cultura','sociedade','política','economia','governo','direito','cidadania','revolução','guerra','período','século','democracia','ditadura','capitalismo','socialismo','feudalismo','geografia','território','população','espaço','região','globalização','imperialismo','colonização'];
-  const temConceito = termosHum.some(p => resposta.toLowerCase().includes(p));
+
+  // ===== 4. ANÁLISE DE HUMANAS =====
+  // Verifica uso de conceitos históricos e sociais
+  const termosHum = [
+    'história','cultura','sociedade',
+    'política','economia','governo'
+  ];
+
+  const temConceito = termosHum.some(
+    p => resposta.toLowerCase().includes(p)
+  );
+
   const palavras = resposta.trim().split(/\s+/).length;
-  if (palavras < 5) return { tipo:'wrong', titulo:'❌ Resposta muito curta', padrao:PADROES.RESPOSTA_CURTA, explicacao:'Em Ciências Humanas, a argumentação precisa ser bem fundamentada com contexto histórico, geográfico ou social.', correto:null, passos:['Contextualize o período ou local','Apresente os agentes envolvidos','Explique as causas e consequências'], dica:'Em Humanas, sempre relacione o tema ao contexto histórico ou social em que ocorreu.', dificuldade:'Análise Histórica' };
-  if (!temConceito) return { tipo:'warning', titulo:'⚠️ Falta contextualização', padrao:PADROES.INTERPRETACAO, explicacao:'Sua resposta não usou termos das Ciências Humanas. Tente incluir conceitos de história, geografia, sociologia ou política.', correto:null, passos:['Use vocabulário da disciplina','Situe o acontecimento no tempo e espaço','Analise causas e consequências'], dica:'Termos como "período", "território", "sociedade" enriquecem a resposta.', dificuldade:'Análise Histórica' };
-  if (palavras < 15) return { tipo:'warning', titulo:'⚠️ Análise incompleta', padrao:PADROES.INTERPRETACAO, explicacao:'Você usou termos corretos, mas a análise pode ser mais aprofundada. Explore mais as relações de causa e efeito.', correto:null, passos:['Desenvolva as causas','Explique as consequências','Relacione com o presente'], dica:'Analise sempre: Quem? Quando? Onde? Por quê? Com quais consequências?', dificuldade:'Análise Histórica' };
-  return { tipo:'correct', titulo:'✅ Boa análise!', padrao:null, explicacao:'Sua resposta demonstra compreensão contextualizada do tema em Ciências Humanas. Parabéns!', correto:null, passos:null, dica:null, dificuldade:null };
+
+  // Resposta muito curta
+  if (palavras < 5)
+    return {
+      tipo:'wrong',
+      titulo:'❌ Resposta muito curta',
+      padrao:PADROES.RESPOSTA_CURTA,
+      explicacao:'Faltou contextualização.',
+      correto:null,
+      passos:[
+        'Explique o contexto',
+        'Mostre causas e consequências'
+      ],
+      dica:'Relacione ao contexto histórico/social.',
+      dificuldade:'Análise Histórica'
+    };
+
+  // Sem conceitos da área
+  if (!temConceito)
+    return {
+      tipo:'warning',
+      titulo:'⚠️ Falta contextualização',
+      padrao:PADROES.INTERPRETACAO,
+      explicacao:'Use termos das Ciências Humanas.',
+      correto:null,
+      passos:[
+        'Use conceitos históricos',
+        'Situe tempo e espaço'
+      ],
+      dica:'Inclua vocabulário da área.',
+      dificuldade:'Análise Histórica'
+    };
+
+  // Resposta pouco desenvolvida
+  if (palavras < 15)
+    return {
+      tipo:'warning',
+      titulo:'⚠️ Análise incompleta',
+      padrao:PADROES.INTERPRETACAO,
+      explicacao:'A análise pode ser aprofundada.',
+      correto:null,
+      passos:[
+        'Explique causas',
+        'Mostre consequências'
+      ],
+      dica:'Desenvolva melhor a análise.',
+      dificuldade:'Análise Histórica'
+    };
+
+  // Resposta correta
+  return {
+    tipo:'correct',
+    titulo:'✅ Boa análise!',
+    padrao:null,
+    explicacao:'A resposta demonstra boa contextualização.',
+    correto:null,
+    passos:null,
+    dica:null,
+    dificuldade:null
+  };
 }
 
 function avaliarMat(pergNorm, respNorm) {
+
+  // ===== 5. CÁLCULO AUTOMÁTICO =====
+  // Converte símbolos matemáticos
   try {
-    const expr = pergNorm.replace(/x/g,'*').replace(/÷/g,'/').replace(/[^0-9+\-*/().]/g,'');
-    const correta = Function('"use strict"; return (' + expr + ')')();
-    if (isNaN(correta) || !isFinite(correta)) throw new Error('invalid');
-    if (Number(respNorm) === correta) return { tipo:'correct', titulo:'✅ Resposta correta!', padrao:null, explicacao:'Muito bem! Você resolveu corretamente a expressão matemática.', correto:null, passos:null, dica:null, dificuldade:null };
+
+    const expr = pergNorm
+      .replace(/x/g,'*')
+      .replace(/÷/g,'/')
+      .replace(/[^0-9+\-*/().]/g,'');
+
+    // Calcula resultado correto
+    const correta = Function(
+      '"use strict"; return (' + expr + ')'
+    )();
+
+    if (isNaN(correta) || !isFinite(correta))
+      throw new Error('invalid');
+
+    // Resposta correta
+    if (Number(respNorm) === correta)
+      return {
+        tipo:'correct',
+        titulo:'✅ Resposta correta!',
+        padrao:null,
+        explicacao:'Você resolveu corretamente.',
+        correto:null,
+        passos:null,
+        dica:null,
+        dificuldade:null
+      };
+
+    // Analisa diferença da resposta
     const diff = Math.abs(Number(respNorm) - correta);
+
     let padrao = PADROES.CALCULO;
-    let dica = 'Refaça os cálculos passo a passo.';
-    if (diff <= 1) { padrao = PADROES.ATENCAO; dica = 'Verifique se não trocou um dígito ou cometeu um pequeno erro de atenção.'; }
-    return { tipo:'wrong', titulo:'❌ Resultado incorreto', padrao, explicacao:`Sua resposta foi ${respNorm}, mas o resultado correto é ${correta}. Verifique cada passo.`, correto:String(correta), passos:['Identifique todas as operações','Resolva seguindo a ordem: ×÷ antes de +−','Confirme cada resultado parcial'], dica, dificuldade:'Operações Mat.' };
+    let dica = 'Refaça os cálculos.';
+
+    // Pequeno erro de atenção
+    if (diff <= 1) {
+      padrao = PADROES.ATENCAO;
+      dica = 'Pode ter sido erro de distração.';
+    }
+
+    return {
+      tipo:'wrong',
+      titulo:'❌ Resultado incorreto',
+      padrao,
+      explicacao:`O correto é ${correta}.`,
+      correto:String(correta),
+      passos:[
+        'Resolva passo a passo',
+        'Confira as operações'
+      ],
+      dica,
+      dificuldade:'Operações Mat.'
+    };
+
   } catch {
-    return { tipo:'warning', titulo:'⚠️ Questão não reconhecida', padrao:null, explicacao:'Não foi possível interpretar a expressão matemática. Verifique se digitou corretamente.', correto:null, passos:null, dica:'Use apenas números e operadores + − × ÷', dificuldade:null };
+
+    // Erro ao interpretar expressão
+    return {
+      tipo:'warning',
+      titulo:'⚠️ Questão não reconhecida',
+      padrao:null,
+      explicacao:'Não foi possível interpretar a conta.',
+      correto:null,
+      passos:null,
+      dica:'Use apenas números e operadores.',
+      dificuldade:null
+    };
   }
 }
 
 function mostrarFeedback(r) {
+
+  // ===== 6. EXIBIR FEEDBACK =====
+  // Define estilo visual do resultado
   const box = document.getElementById('feedbackBox');
-  const cor = r.tipo === 'correct' ? 'correct' : r.tipo === 'wrong' ? 'wrong' : 'warning';
-  const icon = r.tipo === 'correct' ? 'check-circle' : r.tipo === 'wrong' ? 'x-circle' : 'alert-triangle';
+
+  const cor =
+    r.tipo === 'correct'
+      ? 'correct'
+      : r.tipo === 'wrong'
+      ? 'wrong'
+      : 'warning';
+
+  const icon =
+    r.tipo === 'correct'
+      ? 'check-circle'
+      : r.tipo === 'wrong'
+      ? 'x-circle'
+      : 'alert-triangle';
+
+  // Monta HTML do feedback
   let html = `<div class="feedback-box ${cor}">`;
+
   html += `<div class="feedback-header"><span style="font-size:1.1rem">${r.titulo}</span></div>`;
+
   html += `<div class="feedback-body ${cor}">`;
-  if (r.padrao) html += `<div class="error-pattern-badge">🏷 ${r.padrao}</div>`;
+
+  if (r.padrao)
+    html += `<div class="error-pattern-badge">🏷 ${r.padrao}</div>`;
+
   html += `<div class="feedback-section"><div class="feedback-section-title">Diagnóstico</div><p class="feedback-text">${r.explicacao}</p></div>`;
-  if (r.correto) html += `<div class="feedback-section"><div class="feedback-section-title">Resultado correto</div><p class="feedback-text"><strong>${r.correto}</strong></p></div>`;
+
+  if (r.correto)
+    html += `<div class="feedback-section"><div class="feedback-section-title">Resultado correto</div><p class="feedback-text"><strong>${r.correto}</strong></p></div>`;
+
+  // Mostra passos de resolução
   if (r.passos && r.passos.length) {
+
     html += `<div class="feedback-section"><div class="feedback-section-title">Raciocínio correto</div><ul class="feedback-steps">`;
-    r.passos.forEach((p,i) => { html += `<li><span class="step-num">${i+1}</span><span>${p}</span></li>`; });
+
+    r.passos.forEach((p,i) => {
+      html += `<li><span class="step-num">${i+1}</span><span>${p}</span></li>`;
+    });
+
     html += '</ul></div>';
   }
-  if (r.dica) html += `<div class="tip-box"><span>💡</span><p><strong>Dica:</strong> ${r.dica}</p></div>`;
+
+  // Mostra dica extra
+  if (r.dica)
+    html += `<div class="tip-box"><span>💡</span><p><strong>Dica:</strong> ${r.dica}</p></div>`;
+
   html += '</div></div>';
+
+  // Exibe na tela
   box.innerHTML = html;
   box.style.display = 'block';
-  box.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+  box.scrollIntoView({
+    behavior:'smooth',
+    block:'nearest'
+  });
 }
 
 function limpar() {
+
+  // ===== 7. LIMPAR CAMPOS =====
+  // Reseta formulário e feedback
   document.getElementById('inputPergunta').value = '';
+
   document.getElementById('inputResposta').value = '';
+
   document.getElementById('feedbackBox').style.display = 'none';
+
   document.getElementById('feedbackBox').innerHTML = '';
 }
 
