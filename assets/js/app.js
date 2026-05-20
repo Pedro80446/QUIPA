@@ -229,13 +229,21 @@ function closeSidebar() {
 
 // ========== SAIR ==========
 function sair() {
+  // Remove animação/visualização do app
   document.getElementById('appView').classList.remove('visible');
+   // Esconde tela principal do sistema
   document.getElementById('appView').style.display = 'none';
+   // Mostra tela de login novamente
   document.getElementById('loginView').style.display = 'flex';
+   // Limpa histórico do usuário
   historico = [];
+   // Reseta dados do perfil
   perfil = { tipo:'', nome:'', escola:'', serie:'', avatar:'' };
+   // Remove estilo de professor do avatar
   document.getElementById('userAvatar').classList.remove('prof');
+   // Pequeno atraso para reset visual da tela
   setTimeout(() => { document.getElementById('appView').style.display = ''; }, 50);
+ 
 }
 
 // ========== DISCIPLINAS ==========
